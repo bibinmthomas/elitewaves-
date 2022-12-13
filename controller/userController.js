@@ -107,16 +107,16 @@ const verifyLogin = async(req,res)=>{
 
 const loadStore = async(req,res)=>{
     userSession = req.session
-    userSession.offer = offer
-    userSession.couponTotal = couponTotal
+    if(userSession.offer){}else{
+        userSession.offer = offer
+        userSession.couponTotal = couponTotal
+    }
     // console.log('userSession:',userSession);
     const productData = await Product.find()
     res.render('store',{isLoggedin,products:productData,id:userSession.userId})
 }
 const loadCatalog =async(req,res)=>{
     userSession = req.session
-    userSession.offer = offer
-    userSession.couponTotal = couponTotal
     //search
     let search = ''
     if (req.query.search) {
@@ -375,13 +375,18 @@ const loadCart = async(req,res)=>{
         if(userSession.userId){
             const userData =await User.findById({ _id:userSession.userId })
             const completeUser = await userData.populate('cart.item.productId')
-            if( userData.cart.item.length ==0 ){
-                userSession.couponTotal =0
+            if( userData.cart.item.length == 0 ){
+                userSession.couponTotal = 0
             }
             if(userSession.couponTotal == 0){
                 //update coupon
                 userSession.couponTotal = userData.cart.totalPrice
             }
+            // if(userSession.offer =='None'){
+            //     userSession.couponTotal = userData.cart.totalPrice
+            // }
+            console.log(userSession)
+            console.log(userSession.couponTotal);
             res.render('cart',{isLoggedin,id:userSession.userId,cartProducts:completeUser.cart,offer:userSession.offer,couponTotal:userSession.couponTotal})
         }else{
             res.render('cart',{isLoggedin,id:userSession.userId,offer:userSession.offer,couponTotal:userSession.couponTotal})  
@@ -398,7 +403,7 @@ const addToCart = async(req,res,next)=>{
     const productData =await Product.findById({ _id:productId })
     const usertemp =await userData.addToCart(productData)
     if(usertemp){
-        userSession.couponTotal = usertemp.cart.totalPrice
+        console.log(usertemp);
     }
     res.redirect('/catalog')
 }
@@ -409,7 +414,8 @@ const deleteCart = async(req,res,next)=>{
     const userData =await User.findById({_id:userSession.userId})
     const usertemp =await userData.removefromCart(productId)
     if(usertemp){
-        userSession.couponTotal = usertemp.cart.totalPrice
+        // userSession.couponTotal = usertemp.cart.totalPrice
+        console.log(usertemp);
     }
     res.redirect('/cart')
 }
@@ -447,11 +453,13 @@ const loadCheckout = async(req,res)=>{
     try {
         userSession = req.session
         if(userSession.userId){
+            console.log(userSession);
+            console.log(userSession.couponTotal);
             const userData =await User.findById({ _id:userSession.userId })
             const completeUser = await userData.populate('cart.item.productId')
             // console.log('UserData: ',userData);
             // console.log('completeUser: ',completeUser);
-
+            // console.log(userSession.couponTotal);
             res.render('checkout',{isLoggedin,id:userSession.userId,cartProducts:completeUser.cart,offer:userSession.offer,couponTotal:userSession.couponTotal})
         }else{
             res.render('checkout',{isLoggedin,id:userSession.userId,offer:userSession.offer,couponTotal:userSession.couponTotal})
