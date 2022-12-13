@@ -375,7 +375,7 @@ const loadCart = async(req,res)=>{
         if(userSession.userId){
             const userData =await User.findById({ _id:userSession.userId })
             const completeUser = await userData.populate('cart.item.productId')
-            if(userSession.couponTotal == 0){
+            if(userSession.couponTotal <= 0){
                 //update coupon
                 userSession.couponTotal = userData.cart.totalPrice
             }
