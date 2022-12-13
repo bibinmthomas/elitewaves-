@@ -393,7 +393,10 @@ const addToCart = async(req,res,next)=>{
     userSession = req.session
     const userData =await User.findById({_id:userSession.userId})
     const productData =await Product.findById({ _id:productId })
-    userData.addToCart(productData)
+    const usertemp =await userData.addToCart(productData)
+    if(usertemp){
+        userSession.couponTotal = usertemp.cart.totalPrice
+    }
     res.redirect('/catalog')
 }
 
