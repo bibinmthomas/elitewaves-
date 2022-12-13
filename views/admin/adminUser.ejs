@@ -1,0 +1,202 @@
+<%- include("../partials/adminHeader") -%>
+    <!-- ============================================================== -->
+    <!-- End Topbar header -->
+    <!-- ============================================================== -->
+    <!-- ============================================================== -->
+    <!-- Left Sidebar - style you can find in sidebar.scss  -->
+    <!-- ============================================================== -->
+    <%- include("../partials/adminSidebar") -%>
+        <!-- ============================================================== -->
+        <!-- End Left Sidebar - style you can find in sidebar.scss  -->
+        <!-- ============================================================== -->
+        <!-- ============================================================== -->
+        <!-- Page wrapper  -->
+        <!-- ============================================================== -->
+        <div class="page-wrapper">
+            <!-- ============================================================== -->
+            <!-- Bread crumb and right sidebar toggle -->
+            <!-- ============================================================== -->
+            <div class="page-breadcrumb">
+                <div class="row align-items-center">
+                    <div class="col-5">
+                        <h4 class="page-title">Dashboard</h4>
+                        <!-- <div class="d-flex align-items-center">
+                            <nav aria-label="breadcrumb">
+                                <ol class="breadcrumb">
+                                    <li class="breadcrumb-item"><a href="#">Home</a></li>
+                                    <li class="breadcrumb-item active" aria-current="page">Library</li>
+                                </ol>
+                            </nav>
+                        </div> -->
+                    </div>
+
+                </div>
+            </div>
+            <!-- ============================================================== -->
+            <!-- End Bread crumb and right sidebar toggle -->
+            <!-- ============================================================== -->
+            <!-- ============================================================== -->
+            <!-- Container fluid  -->
+            <!-- ============================================================== -->
+            <div class="container-fluid">
+                <!-- ============================================================== -->
+                <!-- Sales chart -->
+                <!-- ============================================================== -->
+
+                <!-- ============================================================== -->
+                <!-- Sales chart -->
+                <!-- ============================================================== -->
+                <!-- ============================================================== -->
+                <!-- Table -->
+                <!-- ============================================================== -->
+                <div class="row">
+                    <!-- column -->
+                    <div class="col-12">
+                        <div class="card">
+                            <div class="card-body">
+                                <!-- title -->
+                                <div class="d-md-flex">
+                                    <div>
+                                        <h4 class="card-title">Users List</h4>
+                                        <h5 class="card-subtitle">List of Users Who are Signed In</h5>
+                                    </div>
+                                    <!-- <div class="ms-auto">
+                                        <div class="dl">
+                                            <select class="form-select shadow-none">
+                                                <option value="0" selected>Monthly</option>
+                                                <option value="1">Daily</option>
+                                                <option value="2">Weekly</option>
+                                                <option value="3">Yearly</option>
+                                            </select>
+                                        </div>
+                                    </div> -->
+                                </div>
+                                <!-- title -->
+                            </div>
+                            <div class="table-responsive upgrade-btn">
+                                <table class="table v-middle table-striped">
+                                    <thead>
+                                        <tr class="bg-light">
+                                            <th class="border-top-0">SI NO</th>
+                                            <th class="border-top-0">USER</th>
+                                            <th class="border-top-0">E-MAIL</th>
+                                            <th class="border-top-0">MOBILE NO</th>
+                                            <th class="border-top-0">Status</th>
+                                            <th class="border-top-0">ACTION</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <% if( users.length> 0){ %>
+                                            <% for(let i=1;i <=users.length; i++){ %>
+                                                <tr>
+                                                    <td>
+                                                        <%= i %>
+                                                    </td>
+
+                                                    <td>
+                                                        <div class="d-flex align-items-center">
+                                                            <div class="m-r-10"><a
+                                                                    class="btn btn-circle d-flex btn-info text-white"><i
+                                                                        class=" mdi mdi-account-circle"></i></a>
+                                                            </div>
+                                                            <div class="">
+                                                                <h4 class="m-b-0 font-16">
+                                                                    <%= users[i-1].name %>
+                                                                </h4>
+                                                            </div>
+                                                        </div>
+                                                    </td>
+                                                    <td>
+                                                        <%= users[i-1].email %>
+                                                    </td>
+                                                    <td>
+                                                        <%= users[i-1].mobile %>
+                                                    </td>
+                                                    <td>
+                                                        <% if(users[i-1].isVerified) { %>
+                                                            <label class="btn-success">
+                                                                <i class="m-r-10 mdi mdi-account">UnBlocked</i></label>
+                                                            <% } else { %>
+                                                                <label class="btn-danger">
+                                                                    <i
+                                                                        class="m-r-10 mdi mdi-account-off">Blocked</i></label>
+                                                                <% } %>
+                                                                    </label>
+                                                    </td>
+
+                                                    <td>
+                                                        <!-- Default switch -->
+
+                                                        <% if(users[i-1].isVerified) { %>
+                                                            <a class="btn btn-danger text-white"
+                                                                href="/admin/block-user?id=<%= users[i-1]._id %> ">Block</a>
+                                                            <% } else { %>
+                                                                <a class="btn btn-info"
+                                                                    href="/admin/block-user?id=<%= users[i-1]._id %> ">Unblock</a>
+                                                                <% } %>
+                                                    </td>
+                                                </tr>
+                                                <% } } else{ %>
+                                                    <tr>
+                                                        <td colspan="5">Users Not Found</td>
+                                                    </tr>
+                                                    <% } %>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- ============================================================== -->
+                <!-- Table -->
+                <!-- ============================================================== -->
+                <!-- ============================================================== -->
+                <!-- Recent comment and chats -->
+                <!-- ============================================================== -->
+
+                <!-- ============================================================== -->
+                <!-- Recent comment and chats -->
+                <!-- ============================================================== -->
+            </div>
+            <!-- ============================================================== -->
+            <!-- End Container fluid  -->
+            <!-- ============================================================== -->
+            <!-- ============================================================== -->
+            <!-- footer -->
+            <!-- ============================================================== -->
+            <footer class="footer text-center">
+                All Rights Reserved by Xtreme Admin. Designed and Developed by <a
+                    href="https://www.wrappixel.com">WrapPixel</a>.
+            </footer>
+            <!-- ============================================================== -->
+            <!-- End footer -->
+            <!-- ============================================================== -->
+        </div>
+        <!-- ============================================================== -->
+        <!-- End Page wrapper  -->
+        <!-- ============================================================== -->
+        </div>
+        <!-- ============================================================== -->
+        <!-- End Wrapper -->
+        <!-- ============================================================== -->
+        <!-- ============================================================== -->
+        <!-- All Jquery -->
+        <!-- ============================================================== -->
+        <script src="assets/libs/jquery/dist/jquery.min.js"></script>
+        <!-- Bootstrap tether Core JavaScript -->
+        <script src="assets/libs/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+        <script src="dist/js/app-style-switcher.js"></script>
+        <!--Wave Effects -->
+        <script src="dist/js/waves.js"></script>
+        <!--Menu sidebar -->
+        <script src="dist/js/sidebarmenu.js"></script>
+        <!--Custom JavaScript -->
+        <script src="dist/js/custom.js"></script>
+        <!--This page JavaScript -->
+        <!--chartis chart-->
+        <script src="assets/libs/chartist/dist/chartist.min.js"></script>
+        <script src="assets/libs/chartist-plugin-tooltips/dist/chartist-plugin-tooltip.min.js"></script>
+        <script src="dist/js/pages/dashboards/dashboard1.js"></script>
+        </body>
+
+        </html>

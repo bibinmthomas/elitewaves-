@@ -1,0 +1,355 @@
+<% if(isLoggedin) { %>
+    <%- include('../partials/userloggedinHeader') %>
+        <% }else { %>
+            <%- include('../partials/userHeader') %>
+                <% } %>
+
+
+                    <div class="nk-main">
+
+                        <!-- START: Breadcrumbs -->
+                        <div class="nk-gap-1"></div>
+                        <div class="container">
+                            <ul class="nk-breadcrumbs">
+
+
+                                <li><a href="/">Home</a></li>
+
+
+                                <li><span class="fa fa-angle-right"></span></li>
+
+                                <li><a href="/catalog">Store</a></li>
+
+
+                                <li><span class="fa fa-angle-right"></span></li>
+
+                                <li><a href="/cart">Cart</a></li>
+
+
+                                <li><span class="fa fa-angle-right"></span></li>
+
+                                <li><span>Checkout</span></li>
+
+                            </ul>
+                        </div>
+                        <div class="nk-gap-1"></div>
+                        <!-- END: Breadcrumbs -->
+
+
+
+
+                        <div class="container">
+
+                            <div class="nk-store nk-store-checkout">
+                                <h3 class="nk-decorated-h-2"><span><span class="text-main-1">Billing</span>
+                                        Details</span></h3>
+
+                                <!-- START: Billing Details -->
+                                <div class="nk-gap"></div>
+                                <form action="/checkout" method="post" class="nk-form">
+                                    <div class="row vertical-gap">
+                                        <div class="col-lg-6">
+
+                                            <div class="nk-gap-1"></div>
+                                            <label for="country-sel">Country <span class="text-main-1">*</span>:</label>
+                                            <select name="country" class="form-control required" id="country-sel" required>
+                                                <option value="none">Select a country...</option>
+                                                <option value="India">India</option>
+                                                <option value="USA">USA</option>
+                                                <option value="UK">UK</option>
+                                                <option value="KSA">KSA</option>
+
+                                            </select>
+                                        </div>
+                                        <div class="col-lg-6">
+                                            
+                                            <div class="nk-gap-2"></div>
+                                            <div class="form-check">
+                                                <input class="form-check-input" type="radio" name="payment" id="exampleRadios1" value="Cash-on-Dilevery" checked>
+                                                <label class="form-check-label" for="exampleRadios1">
+                                                    Cash on Dilevery
+                                                </label>
+                                              </div>
+                                              <div class="form-check">
+                                                <input class="form-check-input" type="radio" name="payment" id="exampleRadios2" value="RazorPay">
+                                                <label class="form-check-label" for="exampleRadios2">
+                                                    RazorPay
+                                                </label>
+                                              </div>
+                                              <div class="form-check">
+                                                <input class="form-check-input" type="radio" name="payment" id="exampleRadios3" value="PayPal">
+                                                <label class="form-check-label" for="exampleRadios3">
+                                                    PayPal
+                                                </label>
+                                              </div>
+
+                                        </div>
+                                        <div class="col-lg-12">
+                                            <label for="address">Address <span class="text-main-1">*</span>:</label>
+                                            <input type="text" class="form-control required" name="address"
+                                                id="address" required>
+
+                                            <div class="nk-gap-1"></div>
+                                            <label for="city">Town / City <span class="text-main-1">*</span>:</label>
+                                            <input type="text" class="form-control required" name="city" id="city" required>
+
+                                            <div class="nk-gap-1"></div>
+                                            <div class="row vertical-gap">
+                                                <div class="col-sm-6">
+                                                    <label for="state">State / Country <span
+                                                            class="text-main-1">*</span>:</label>
+                                                    <input type="text" class="form-control required" name="state"
+                                                        id="state" required>
+                                                </div>
+                                                <div class="col-sm-6">
+                                                    <label for="zip">Postcode / ZIP <span
+                                                            class="text-main-1">*</span>:</label>
+                                                    <input type="tel" class="form-control required" name="zip" id="zip" required>
+                                                </div>
+                                            </div>
+
+                                            <div class="nk-gap-1"></div>
+
+                                        </div>
+                                    </div>
+
+
+                                    <button type="submit" class="nk-btn nk-btn-rounded nk-btn-color-main-1" href="">Place Order</button>
+                                
+
+                                </form>
+                                <!-- END: Billing Details -->
+
+
+                                    <!-- START: Order Products -->
+                                    <div class="nk-gap-3"></div>
+                                    <h3 class="nk-decorated-h-2"><span><span class="text-main-1">Your</span>
+                                            Order</span></h3>
+                                    <div class="nk-gap"></div>
+                                    <div class="table-responsive">
+
+
+                                        <table class="nk-table nk-table-sm">
+                                            <% if(id) { %>
+                                                <thead class="thead-default">
+
+
+                                                    <tr>
+                                                        <th class="nk-product-cart-title">Product</th>
+                                                        <th class="nk-product-cart-total">Total</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    <% for(let key of cartProducts.item){ %>
+                                                        <tr>
+                                                            <td class="nk-product-cart-title">
+                                                                <%= key.productId.name %> &times; <%= key.qty %>
+                                                            </td>
+                                                            <td class="nk-product-cart-total">
+                                                                ₹ <%= key.productId.price*key.qty %>
+                                                            </td>
+                                                        </tr>
+                                                        <% } %>
+
+                                                            <tr class="nk-store-cart-totals-subtotal">
+                                                                <td>
+                                                                    Subtotal
+                                                                </td>
+                                                                <td>
+                                                                    ₹ <%= cartProducts.totalPrice %>
+                                                                </td>
+                                                            </tr>
+                                                            <tr class="nk-store-cart-totals-shipping">
+                                                                <td>
+                                                                    Shipping
+                                                                </td>
+                                                                <td>
+                                                                    Free Shipping
+                                                                </td>
+                                                            </tr>
+                                                            <tr class="nk-store-cart-totals-shipping">
+                                                                <td>
+                                                                    Coupon
+                                                                </td>
+                                                                <td>
+                                                                    <%= offer.name %>
+                                                                </td>
+                                                            </tr>
+                                                            <tr class="nk-store-cart-totals-total">
+                                                                <td>
+                                                                    Total
+                                                                </td>
+                                                                <td>
+                                                                   ₹ <%= couponTotal %>
+                                                                </td>
+                                                            </tr>
+                                                </tbody>
+                                        </table>
+                                    </div>
+
+                                    <!-- END: Order Products -->
+
+                                    <div class="nk-gap-2"></div>
+                            </div>
+                        </div>
+                        <div class="nk-gap-2"></div>
+
+
+                        <% }else{ %>
+                            <h4>Not Signed in. <br>Signin to access Checkout </h4>
+                            <a href="/login" class="btn btn-danger ml-2">login</a>
+                            <div class="nk-gap-2"></div>
+                            <% } %>
+                                
+
+                                <!-- START: Footer -->
+                                <footer class="nk-footer">
+
+                                    <div class="container">
+                                        <div class="nk-gap-3"></div>
+                                        <div class="row vertical-gap">
+                                            <div class="col-md-6">
+                                                <div class="nk-widget">
+                                                    <h4 class="nk-widget-title"><span class="text-main-1">Contact</span>
+                                                        With Us</h4>
+                                                    <div class="nk-widget-content">
+                                                        <form action="php/ajax-contact-form.php"
+                                                            class="nk-form nk-form-ajax">
+                                                            <div class="row vertical-gap sm-gap">
+                                                                <div class="col-md-6">
+                                                                    <input type="email" class="form-control required"
+                                                                        name="email" placeholder="Email *">
+                                                                </div>
+                                                                <div class="col-md-6">
+                                                                    <input type="text" class="form-control required"
+                                                                        name="name" placeholder="Name *">
+                                                                </div>
+                                                            </div>
+                                                            <div class="nk-gap"></div>
+                                                            <textarea class="form-control required" name="message"
+                                                                rows="5" placeholder="Message *"></textarea>
+                                                            <div class="nk-gap-1"></div>
+                                                            <button class="nk-btn nk-btn-rounded nk-btn-color-white">
+                                                                <span>Send</span>
+                                                                <span class="icon"><i
+                                                                        class="ion-paper-airplane"></i></span>
+                                                            </button>
+                                                            <div class="nk-form-response-success"></div>
+                                                            <div class="nk-form-response-error"></div>
+                                                        </form>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <div class="nk-widget">
+                                                    <h4 class="nk-widget-title"><span class="text-main-1">Latest</span>
+                                                        Posts</h4>
+                                                    <div class="nk-widget-content">
+                                                        <div class="row vertical-gap sm-gap">
+
+                                                            <div class="col-lg-6">
+                                                                <div class="nk-widget-post-2">
+                                                                    <a href="blog-article.html" class="nk-post-image">
+                                                                        <img src="assets/images/post-1-sm.jpg" alt="">
+                                                                    </a>
+                                                                    <div class="nk-post-title"><a
+                                                                            href="blog-article.html">Smell magic in the
+                                                                            air. Or maybe barbecue</a></div>
+                                                                    <div class="nk-post-date">
+                                                                        <span class="fa fa-calendar"></span> Sep 18,
+                                                                        2018
+                                                                        <span class="fa fa-comments"></span> <a
+                                                                            href="#">4</a>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+
+                                                            <div class="col-lg-6">
+                                                                <div class="nk-widget-post-2">
+                                                                    <a href="blog-article.html" class="nk-post-image">
+                                                                        <img src="assets/images/post-2-sm.jpg" alt="">
+                                                                    </a>
+                                                                    <div class="nk-post-title"><a
+                                                                            href="blog-article.html">Grab your sword and
+                                                                            fight the Horde</a></div>
+                                                                    <div class="nk-post-date">
+                                                                        <span class="fa fa-calendar"></span> Sep 5, 2018
+                                                                        <span class="fa fa-comments"></span> <a
+                                                                            href="#">7</a>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="nk-widget">
+                                                    <h4 class="nk-widget-title"><span class="text-main-1">In</span>
+                                                        Twitter</h4>
+                                                    <div class="nk-widget-content">
+                                                        <div class="nk-twitter-list" data-twitter-count="1"></div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="nk-gap-3"></div>
+                                    </div>
+
+                                    <div class="nk-copyright">
+                                        <div class="container">
+                                            <div class="nk-copyright-left">
+                                                <a target="_blank" href="https://www.templateshub.net">Templates Hub</a>
+                                            </div>
+                                            <div class="nk-copyright-right">
+                                                <ul class="nk-social-links-2">
+                                                    <li><a class="nk-social-rss" href="#"><span
+                                                                class="fa fa-rss"></span></a></li>
+                                                    <li><a class="nk-social-twitch" href="#"><span
+                                                                class="fab fa-twitch"></span></a></li>
+                                                    <li><a class="nk-social-steam" href="#"><span
+                                                                class="fab fa-steam"></span></a></li>
+                                                    <li><a class="nk-social-facebook" href="#"><span
+                                                                class="fab fa-facebook"></span></a></li>
+                                                    <li><a class="nk-social-google-plus" href="#"><span
+                                                                class="fab fa-google-plus"></span></a></li>
+                                                    <li><a class="nk-social-twitter" href="#" target="_blank"><span
+                                                                class="fab fa-twitter"></span></a></li>
+                                                    <li><a class="nk-social-pinterest" href="#"><span
+                                                                class="fab fa-pinterest-p"></span></a></li>
+
+                                                    <!-- Additional Social Buttons
+                        <li><a class="nk-social-behance" href="#"><span class="fab fa-behance"></span></a></li>
+                        <li><a class="nk-social-bitbucket" href="#"><span class="fab fa-bitbucket"></span></a></li>
+                        <li><a class="nk-social-dropbox" href="#"><span class="fab fa-dropbox"></span></a></li>
+                        <li><a class="nk-social-dribbble" href="#"><span class="fab fa-dribbble"></span></a></li>
+                        <li><a class="nk-social-deviantart" href="#"><span class="fab fa-deviantart"></span></a></li>
+                        <li><a class="nk-social-flickr" href="#"><span class="fab fa-flickr"></span></a></li>
+                        <li><a class="nk-social-foursquare" href="#"><span class="fab fa-foursquare"></span></a></li>
+                        <li><a class="nk-social-github" href="#"><span class="fab fa-github"></span></a></li>
+                        <li><a class="nk-social-instagram" href="#"><span class="fab fa-instagram"></span></a></li>
+                        <li><a class="nk-social-linkedin" href="#"><span class="fab fa-linkedin"></span></a></li>
+                        <li><a class="nk-social-medium" href="#"><span class="fab fa-medium"></span></a></li>
+                        <li><a class="nk-social-odnoklassniki" href="#"><span class="fab fa-odnoklassniki"></span></a></li>
+                        <li><a class="nk-social-paypal" href="#"><span class="fab fa-paypal"></span></a></li>
+                        <li><a class="nk-social-reddit" href="#"><span class="fab fa-reddit"></span></a></li>
+                        <li><a class="nk-social-skype" href="#"><span class="fab fa-skype"></span></a></li>
+                        <li><a class="nk-social-soundcloud" href="#"><span class="fab fa-soundcloud"></span></a></li>
+                        <li><a class="nk-social-slack" href="#"><span class="fab fa-slack"></span></a></li>
+                        <li><a class="nk-social-tumblr" href="#"><span class="fab fa-tumblr"></span></a></li>
+                        <li><a class="nk-social-vimeo" href="#"><span class="fab fa-vimeo"></span></a></li>
+                        <li><a class="nk-social-vk" href="#"><span class="fab fa-vk"></span></a></li>
+                        <li><a class="nk-social-wordpress" href="#"><span class="fab fa-wordpress"></span></a></li>
+                        <li><a class="nk-social-youtube" href="#"><span class="fab fa-youtube"></span></a></li>
+                    -->
+                                                </ul>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </footer>
+                                <!-- END: Footer -->
+
+
+                    </div>
+
+
+                    <%- include('../partials/userFooter') %>

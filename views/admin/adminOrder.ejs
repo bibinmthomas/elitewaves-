@@ -1,0 +1,304 @@
+<%- include("../partials/adminHeader") -%>
+    <!-- ============================================================== -->
+    <!-- End Topbar header -->
+    <!-- ============================================================== -->
+    <!-- ============================================================== -->
+    <!-- Left Sidebar - style you can find in sidebar.scss  -->
+    <!-- ============================================================== -->
+    <%- include("../partials/adminSidebar") -%>
+        <!-- ============================================================== -->
+        <!-- End Left Sidebar - style you can find in sidebar.scss  -->
+        <!-- ============================================================== -->
+        <!-- ============================================================== -->
+        <!-- Page wrapper  -->
+        <!-- ============================================================== -->
+        <div class="page-wrapper">
+            <!-- ============================================================== -->
+            <!-- Bread crumb and right sidebar toggle -->
+            <!-- ============================================================== -->
+            <div class="page-breadcrumb">
+                <div class="row align-items-center">
+                    <div class="col-5">
+                        <h4 class="page-title">Orders</h4>
+                        <!-- <div class="d-flex align-items-center">
+                            <nav aria-label="breadcrumb">
+                                <ol class="breadcrumb">
+                                    <li class="breadcrumb-item"><a href="#">Home</a></li>
+                                    <li class="breadcrumb-item active" aria-current="page">Library</li>
+                                </ol>
+                            </nav>
+                        </div> -->
+                    </div>
+                    <!-- <div class="col-7">
+                        <div class="text-end upgrade-btn">
+                            <a href="/admin/add-product" class="btn btn-danger text-white"></a>
+                        </div>
+                    </div> -->
+                </div>
+            </div>
+            <!-- ============================================================== -->
+            <!-- End Bread crumb and right sidebar toggle -->
+            <!-- ============================================================== -->
+            <!-- ============================================================== -->
+            <!-- Container fluid  -->
+            <!-- ============================================================== -->
+            <div class="container-fluid">
+                <!-- ============================================================== -->
+                <!-- Start Page Content -->
+                <!-- ============================================================== -->
+                <div class="row">
+                    <div class="col-12">
+                        <div class="card">
+                            <div class="card-body">
+                                <h4 class="card-title">Orders List</h4>
+                                <!-- <h6 class="card-subtitle">Add <code>.table-hover</code> to enable a hover state on table
+                                    rows within a <code>&lt;tbody&gt;</code>.</h6> -->
+                                <a href="/admin/adminOrder?id=ALL" class="btn btn-danger text-white">All Orders</a>
+                                <a href="/admin/adminOrder?id=CONFIRMED" class="btn btn-danger text-white">Comfirmed
+                                    Orders</a>
+                                <a href="/admin/adminOrder?id=DELIVERED" class="btn btn-danger text-white">Delivered
+                                    Orders</a>
+
+                            </div>
+
+                            <h1 class="ms-1 text-danger">
+                                <%= id %>
+                            </h1>
+
+                            <% if(id=='CONFIRMED' ){ %>
+
+                                <div class="table-responsive">
+                                    <table id="orders" class="table table-hover table-striped" style="width: 100%;">
+                                        style="table-layout: fixed;">
+                                        <thead>
+                                            <tr>
+                                                <th scope="col">SI NO</th>
+                                                <th scope="col">Order Id</th>
+                                                <th scope="col">User Id</th>
+                                                <th scope="col">Time</th>
+                                                <th scope="col">Mode</th>
+                                                <th scope="col">Total Price</th>
+                                                <th scope="col">Status</th>
+                                                <th scope="col">Actions</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <% if( order.length> 0){ %>
+                                                <% for(let i=1;i <=order.length; i++){ %>
+                                                    <% if(order[i-1].status =="Comfirmed"){ %>
+                                                    <tr>
+                                                        <th scope="row">
+                                                            <%= i %>
+                                                        </th>
+                                                        <td>
+                                                            <%= order[i-1]._id %>
+                                                        </td>
+                                                        <td>
+                                                            <%= order[i-1].userId %>
+                                                        </td>
+                                                        <td>
+                                                            <%= order[i-1].createdAt %>
+                                                        </td>
+                                                        <td>
+                                                            <%= order[i-1].payment %>
+                                                        </td>
+                                                        <td>
+                                                            <%= order[i-1].products.totalPrice %>
+                                                        </td>
+                                                        <td>
+                                                            <%= order[i-1].status %>
+                                                        </td>
+                                                        <td>
+                                                            <a href="/admin/admin-cancel-order?id=<%= order[i-1]._id %>"
+                                                                class="btn btn-danger mb-1">Cancel Order</a>
+                                                            <a href="/admin/admin-delivered-order?id=<%= order[i-1]._id %>"
+                                                                class="btn btn-danger ">Deliver Order</a>
+                                                        </td>
+                                                    </tr>
+                                                    <% }}}else{ %>
+                                                        <tr>
+                                                            <td colspan="5">Orders Not Found</td>
+                                                        </tr>
+                                                        <% } %>
+                                        </tbody>
+                                    </table>
+                                    <script>
+                                        $(document).ready(function () {
+                                        $('#orders').DataTable();
+                                        });    
+                                    </script>
+                                </div>
+
+                                <% }else if(id=='DELIVERED' ){ %>
+
+                                    <div class="table-responsive">
+                                        <table class="table table-hover table-striped "
+                                            style="table-layout: fixed;">
+                                            <thead>
+                                                <tr>
+                                                    <th scope="col">SI NO</th>
+                                                    <th scope="col">Order Id</th>
+                                                    <th scope="col">User Id</th>
+                                                    <th scope="col">Time</th>
+                                                    <th scope="col">Mode</th>
+                                                    <th scope="col">Total Price</th>
+                                                    <th scope="col">Status</th>
+                                                    <th scope="col">Actions</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <% if( order.length> 0){ %>
+                                                    <% for(let i=1;i <=order.length; i++){ %>
+                                                        <% if(order[i-1].status =="Delivered"){ %>
+                                                        <tr>
+                                                            <th scope="row">
+                                                                <%= i %>
+                                                            </th>
+                                                            <td>
+                                                                <%= order[i-1]._id %>
+                                                            </td>
+                                                            <td>
+                                                                <%= order[i-1].userId %>
+                                                            </td>
+                                                            <td>
+                                                                <%= order[i-1].createdAt %>
+                                                            </td>
+                                                            <td>
+                                                                <%= order[i-1].payment %>
+                                                            </td>
+                                                            <td>
+                                                                <%= order[i-1].products.totalPrice %>
+                                                            </td>
+                                                            <td>
+                                                                <%= order[i-1].status %>
+                                                            </td>
+                                                            <td>
+                                                                <a href="/admin/admin-cancel-order?id=<%= order[i-1]._id %>"
+                                                                    class="btn btn-danger mb-1">Cancel Order</a>
+                                                            </td>
+                                                        </tr>
+                                                        <% }}}else{ %>
+                                                            <tr>
+                                                                <td colspan="5">Orders Not Found</td>
+                                                            </tr>
+                                                            <% } %>
+                                            </tbody>
+                                        </table>
+                                    </div>
+
+                                    <% }else{ %>
+
+                                        <div class="table-responsive">
+                                            <table class="table table-hover table-striped "
+                                                style="table-layout: fixed;">
+                                                <thead>
+                                                    <tr>
+                                                        <th scope="col">SI NO</th>
+                                                        <th scope="col">Order Id</th>
+                                                        <th scope="col">User Id</th>
+                                                        <th scope="col">Time</th>
+                                                        <th scope="col">Mode</th>
+                                                        <th scope="col">Total Price</th>
+                                                        <th scope="col">Status</th>
+                                                        <th scope="col">Actions</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    <% if( order.length> 0){ %>
+                                                        <% for(let i=1;i <=order.length; i++){ %>
+                                                            <tr>
+                                                                <th scope="row">
+                                                                    <%= i %>
+                                                                </th>
+                                                                <td>
+                                                                    <%= order[i-1]._id %>
+                                                                </td>
+                                                                <td>
+                                                                    <%= order[i-1].userId %>
+                                                                </td>
+                                                                <td>
+                                                                    <%= order[i-1].createdAt %>
+                                                                </td>
+                                                                <td>
+                                                                    <%= order[i-1].payment %>
+                                                                </td>
+                                                                <td>
+                                                                    <%= order[i-1].products.totalPrice %>
+                                                                </td>
+                                                                <td>
+                                                                    <%= order[i-1].status %>
+                                                                </td>
+                                                                <td>
+                                                                    <a href="/admin/admin-cancel-order?id=<%= order[i-1]._id %>"
+                                                                        class="btn btn-danger mb-1">Cancel Order</a>
+                                                                    <a href="/admin/admin-confirm-order?id=<%= order[i-1]._id %>"
+                                                                        class="btn btn-danger ">Comfirm Order</a>
+                                                                </td>
+                                                            </tr>
+                                                            <% }}else{ %>
+                                                                <tr>
+                                                                    <td colspan="5">Orders Not Found</td>
+                                                                </tr>
+                                                                <% } %>
+                                                </tbody>
+                                            </table>
+                                        </div>
+
+                                        <% } %>
+
+
+                        </div>
+                    </div>
+
+
+                    <!-- ============================================================== -->
+                    <!-- End PAge Content -->
+                    <!-- ============================================================== -->
+                    <!-- ============================================================== -->
+                    <!-- Right sidebar -->
+                    <!-- ============================================================== -->
+                    <!-- .right-sidebar -->
+                    <!-- ============================================================== -->
+                    <!-- End Right sidebar -->
+                    <!-- ============================================================== -->
+                </div>
+                <!-- ============================================================== -->
+                <!-- End Container fluid  -->
+                <!-- ============================================================== -->
+                <!-- ============================================================== -->
+                <!-- footer -->
+                <!-- ============================================================== -->
+                <footer class="footer text-center">
+                    All Rights Reserved by Xtreme Admin. Designed and Developed by <a
+                        href="https://www.wrappixel.com">WrapPixel</a>.
+                </footer>
+                <!-- ============================================================== -->
+                <!-- End footer -->
+                <!-- ============================================================== -->
+            </div>
+            <!-- ============================================================== -->
+            <!-- End Page wrapper  -->
+            <!-- ============================================================== -->
+        </div>
+        <!-- ============================================================== -->
+        <!-- End Wrapper -->
+        <!-- ============================================================== -->
+        <!-- ============================================================== -->
+        <!-- All Jquery -->
+        <!-- ============================================================== -->
+        <script src="assets/libs/jquery/dist/jquery.min.js"></script>
+        <!-- Bootstrap tether Core JavaScript -->
+        <script src="assets/libs/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+        <script src="dist/js/app-style-switcher.js"></script>
+        <!--Wave Effects -->
+        <script src="dist/js/waves.js"></script>
+        <!--Menu sidebar -->
+        <script src="dist/js/sidebarmenu.js"></script>
+        <!--Custom JavaScript -->
+        <script src="dist/js/custom.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/js/bootstrap.min.js"
+            integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
+            crossorigin="anonymous"></script>
+        </body>
+
+        </html>
