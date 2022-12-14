@@ -1,12 +1,11 @@
 const session = require("express-session");
 
-let userSession = false || {}
+// let req.session = false || {}
 let isLoggedin 
 
 const isLogin = async(req,res,next)=>{
     try {
-        userSession = req.session
-        if(userSession.userId){}
+        if(req.session.userId){}
         else{
             res.redirect('/login')
         }
@@ -17,8 +16,7 @@ const isLogin = async(req,res,next)=>{
 }
 const isLogout = async(req,res,next)=>{
     try {
-        userSession = req.session
-        if(userSession.userId){
+        if(req.session.userId){
             isLoggedin = true
             res.redirect('/')
         }

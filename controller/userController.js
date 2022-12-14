@@ -22,7 +22,7 @@ app.use(cors())
 
 let isLoggedin
 isLoggedin = false
-let userSession = false || {}
+// let req.session = false || {}
 let newUser
 let newOtp
 let offer = {
@@ -83,8 +83,8 @@ const verifyLogin = async(req,res)=>{
                     if(userData.isAdmin ===1){
                         res.render('../signin',{message:"Not user"})
                     }else{
-                        userSession = req.session
-                        userSession.userId = userData._id
+                        // req.session = req.session
+                        req.session.userId = userData._id
                         isLoggedin = true
                         res.redirect('/')
                         console.log("logged in")
@@ -106,18 +106,18 @@ const verifyLogin = async(req,res)=>{
 
 
 const loadStore = async(req,res)=>{
-    userSession = req.session
+    // req.session = req.session
     //coupon initialize
-    if(userSession.offer){}else{
-        userSession.offer = offer
-        userSession.couponTotal = couponTotal
+    if(req.session.offer){}else{
+        req.session.offer = offer
+        req.session.couponTotal = couponTotal
     }
-    // console.log('userSession:',userSession);
+    // console.log('req.session:',req.session);
     const productData = await Product.find()
-    res.render('store',{isLoggedin,products:productData,id:userSession.userId})
+    res.render('store',{isLoggedin,products:productData,id:req.session.userId})
 }
 const loadCatalog =async(req,res)=>{
-    userSession = req.session
+    // req.session = req.session
     //search
     let search = ''
     if (req.query.search) {
@@ -148,7 +148,7 @@ const loadCatalog =async(req,res)=>{
     res.render('store-catalog',{
         isLoggedin,
         products:productData,
-        id:userSession.userId,
+        id:req.session.userId,
         totalPages:Math.ceil(count/limit),
         currentPage:new Number(page),
         previous:new Number(page)-1,
@@ -214,16 +214,16 @@ const verifyOtp = async(req,res)=>{
 
 const userDashboard = async(req,res)=>{
     try {
-        const orderData = await Orders.find({userId:userSession.userId})
-        const userData = await User.findById({_id:userSession.userId})
+        const orderData = await Orders.find({userId:req.session.userId})
+        const userData = await User.findById({_id:req.session.userId})
         res.render('dashboard',{user:userData,userOrders:orderData})
     } catch (error) {
         console.log(error.message)
     }
 }
 const userLogout = async(req,res)=>{
-    userSession = req.session
-    userSession.userId = false
+    // req.session = req.session
+    req.session.userId = false
     isLoggedin = false
     console.log("logged out");
     res.redirect('/')
@@ -237,7 +237,7 @@ const viewProductPage = async(req,res)=>{
         const products = await Product.find()
         const productData =await Product.findById({ _id:id })
         if(productData){
-            res.render('viewProductPage',{isLoggedin,product:productData,products:products,userSession:userSession.userId})
+            res.render('viewProductPage',{isLoggedin,product:productData,products:products,userSession:req.session.userId})
         }
         else{
             res.redirect('/catalog')
@@ -269,12 +269,12 @@ const cancelOrder = async(req,res)=>{
 }
 const viewOrder = async(req,res)=>{
     try {
-        userSession = req.session
-        if(userSession.userId){
+        // req.session = req.session
+        if(req.session.userId){
             const id = req.query.id
-            userSession.currentOrder = id
+            req.session.currentOrder = id
             const orderData = await Orders.findById({_id:id})
-            const userData =await User.findById({ _id:userSession.userId })
+            const userData =await User.findById({ _id:req.session.userId })
             await orderData.populate('products.item.productId')
             // console.log(orderData.products.item);
             res.render("viewOrder",{order:orderData,user:userData})
@@ -287,11 +287,11 @@ const viewOrder = async(req,res)=>{
 }
 const returnProduct = async(req,res)=>{
     try {
-        userSession = req.session
-        if(userSession = req.session){
+        // req.session = req.session
+        if(req.session = req.session){
             const id = req.query.id
             // console.log('id',new String(id));
-            const productOrderData = await Orders.findById({_id:ObjectID(userSession.currentOrder)})
+            const productOrderData = await Orders.findById({_id:ObjectID(req.session.currentOrder)})
             // console.log('productOrderData.products.item[i].productId',new String(productOrderData.products.item[0].productId));
             const productData = await Product.findById({_id:id})
             if(productOrderData){
@@ -327,14 +327,14 @@ const returnProduct = async(req,res)=>{
 
 const loadWishlist = async(req,res)=>{
     try {
-        userSession = req.session
-        if(userSession.userId){
-            const userData =await User.findById({ _id:userSession.userId })
+        // req.session = req.session
+        if(req.session.userId){
+            const userData =await User.findById({ _id:req.session.userId })
             const completeUser = await userData.populate('wishlist.item.productId')
 
-            res.render('wishlist',{isLoggedin,id:userSession.userId,wishlistProducts:completeUser.wishlist})
+            res.render('wishlist',{isLoggedin,id:req.session.userId,wishlistProducts:completeUser.wishlist})
         }else{
-            res.render('wishlist',{isLoggedin,id:userSession.userId})  
+            res.render('wishlist',{isLoggedin,id:req.session.userId})  
         }
     } catch (error) {
         console.log(error.message);
@@ -343,8 +343,8 @@ const loadWishlist = async(req,res)=>{
 
 const addToWishlist = async(req,res)=>{
     const productId = req.query.id
-    userSession = req.session
-    const userData =await User.findById({_id:userSession.userId})
+    // req.session = req.session
+    const userData =await User.findById({_id:req.session.userId})
     const productData =await Product.findById({ _id:productId })
     userData.addToWishlist(productData)
     res.redirect('/catalog')
@@ -352,8 +352,8 @@ const addToWishlist = async(req,res)=>{
 const addCartdelWishlsit = async(req,res)=>{
     const productId = req.query.id
     console.log(productId);
-    userSession = req.session
-    const userData =await User.findById({_id:userSession.userId})
+    // req.session = req.session
+    const userData =await User.findById({_id:req.session.userId})
     const productData =await Product.findById({ _id:productId })
     const add = userData.addToCart(productData)
     if(add){
@@ -363,8 +363,8 @@ const addCartdelWishlsit = async(req,res)=>{
 }
 const deleteWishlist = async(req,res)=>{
     const productId = req.query.id
-    userSession = req.session
-    const userData =await User.findById({_id:userSession.userId})
+    // req.session = req.session
+    const userData =await User.findById({_id:req.session.userId})
     userData.removefromWishlist(productId)
     res.redirect('/wishlist')
 }
@@ -372,25 +372,25 @@ const deleteWishlist = async(req,res)=>{
 
 const loadCart = async(req,res)=>{
     try {
-        userSession = req.session
-        if(userSession.userId){
-            const userData =await User.findById({ _id:userSession.userId })
+        // req.session = req.session
+        if(req.session.userId){
+            const userData =await User.findById({ _id:req.session.userId })
             const completeUser = await userData.populate('cart.item.productId')
             if( userData.cart.item.length == 0 ){
-                userSession.couponTotal = 0
+                req.session.couponTotal = 0
             }
-            if(userSession.couponTotal == 0){
+            if(req.session.couponTotal == 0){
                 //update coupon
-                userSession.couponTotal = userData.cart.totalPrice
+                req.session.couponTotal = userData.cart.totalPrice
             }
-            // if(userSession.offer =='None'){
-            //     userSession.couponTotal = userData.cart.totalPrice
+            // if(req.session.offer =='None'){
+            //     req.session.couponTotal = userData.cart.totalPrice
             // }
-            console.log(userSession)
-            console.log(userSession.couponTotal);
-            res.render('cart',{isLoggedin,id:userSession.userId,cartProducts:completeUser.cart,offer:userSession.offer,couponTotal:userSession.couponTotal})
+            console.log(req.session)
+            console.log(req.session.couponTotal);
+            res.render('cart',{isLoggedin,id:req.session.userId,cartProducts:completeUser.cart,offer:req.session.offer,couponTotal:req.session.couponTotal})
         }else{
-            res.render('cart',{isLoggedin,id:userSession.userId,offer:userSession.offer,couponTotal:userSession.couponTotal})  
+            res.render('cart',{isLoggedin,id:req.session.userId,offer:req.session.offer,couponTotal:req.session.couponTotal})  
         }
             } catch (error) {
         console.log(error);
@@ -399,8 +399,8 @@ const loadCart = async(req,res)=>{
 
 const addToCart = async(req,res,next)=>{
     const productId = req.query.id
-    userSession = req.session
-    const userData =await User.findById({_id:userSession.userId})
+    // req.session = req.session
+    const userData =await User.findById({_id:req.session.userId})
     const productData =await Product.findById({ _id:productId })
     const usertemp =await userData.addToCart(productData)
     if(usertemp){
@@ -411,11 +411,11 @@ const addToCart = async(req,res,next)=>{
 
 const deleteCart = async(req,res,next)=>{
     const productId = req.query.id
-    userSession = req.session
-    const userData =await User.findById({_id:userSession.userId})
+    // req.session = req.session
+    const userData =await User.findById({_id:req.session.userId})
     const usertemp =await userData.removefromCart(productId)
     if(usertemp){
-        // userSession.couponTotal = usertemp.cart.totalPrice
+        // req.session.couponTotal = usertemp.cart.totalPrice
         console.log(usertemp);
     }
     res.redirect('/cart')
@@ -425,8 +425,8 @@ const editQty = async(req,res)=>{
    try {
     id = req.query.id
     console.log(id,' : ',req.body.qty)
-    userSession = req.session
-    const userData =await User.findById({_id:userSession.userId})
+    // req.session = req.session
+    const userData =await User.findById({_id:req.session.userId})
     const foundProduct = userData.cart.item.findIndex(objInItems => objInItems._id == id)
     console.log('product found at: ',foundProduct)
 
@@ -438,7 +438,7 @@ const editQty = async(req,res)=>{
         return acc+(curr.price * curr.qty)
     },0)
     //update coupon
-    userSession.couponTotal =totalPrice - (totalPrice*offer.discount)/100
+    req.session.couponTotal =totalPrice - (totalPrice*offer.discount)/100
     userData.cart.totalPrice = totalPrice
     await userData.save()
 
@@ -452,18 +452,18 @@ const editQty = async(req,res)=>{
 
 const loadCheckout = async(req,res)=>{
     try {
-        userSession = req.session
-        if(userSession.userId){
-            console.log(userSession);
-            console.log(userSession.couponTotal);
-            const userData =await User.findById({ _id:userSession.userId })
+        // req.session = req.session
+        if(req.session.userId){
+            console.log(req.session);
+            console.log(req.session.couponTotal);
+            const userData =await User.findById({ _id:req.session.userId })
             const completeUser = await userData.populate('cart.item.productId')
             // console.log('UserData: ',userData);
             // console.log('completeUser: ',completeUser);
-            // console.log(userSession.couponTotal);
-            res.render('checkout',{isLoggedin,id:userSession.userId,cartProducts:completeUser.cart,offer:userSession.offer,couponTotal:userSession.couponTotal})
+            // console.log(req.session.couponTotal);
+            res.render('checkout',{isLoggedin,id:req.session.userId,cartProducts:completeUser.cart,offer:req.session.offer,couponTotal:req.session.couponTotal})
         }else{
-            res.render('checkout',{isLoggedin,id:userSession.userId,offer:userSession.offer,couponTotal:userSession.couponTotal})
+            res.render('checkout',{isLoggedin,id:req.session.userId,offer:req.session.offer,couponTotal:req.session.couponTotal})
         }
     } catch (error) {
         console.log(error.message);
@@ -472,18 +472,18 @@ const loadCheckout = async(req,res)=>{
 
 const storeOrder = async(req,res)=>{
     try{
-        userSession = req.session
-        if(userSession.userId){
-            const userData =await User.findById({ _id:userSession.userId })
+        // req.session = req.session
+        if(req.session.userId){
+            const userData =await User.findById({ _id:req.session.userId })
             const completeUser = await userData.populate('cart.item.productId')
             // console.log('CompleteUser: ',completeUser);
 
-            userData.cart.totalPrice = userSession.couponTotal
+            userData.cart.totalPrice = req.session.couponTotal
             const updatedTotal = await userData.save()
 
             if(completeUser.cart.totalPrice > 0){ 
             const order =Orders({
-                userId:userSession.userId,
+                userId:req.session.userId,
                 payment:req.body.payment,
                 country:req.body.country,
                 address:req.body.address,
@@ -491,7 +491,7 @@ const storeOrder = async(req,res)=>{
                 state:req.body.state,
                 zip:req.body.zip,
                 products:completeUser.cart,
-                offer:userSession.offer.name
+                offer:req.session.offer.name
             })
             let orderProductStatus =[]
             for(let key of order.products.item){
@@ -502,17 +502,17 @@ const storeOrder = async(req,res)=>{
 
             const orderData =  await order.save()
 
-            userSession.currentOrder = orderData._id
-            // console.log('userSession.currentOrder',userSession.currentOrder);
+            req.session.currentOrder = orderData._id
+            // console.log('req.session.currentOrder',req.session.currentOrder);
             
-            const offerUpdate =await Offer.updateOne({name:userSession.offer.name},{$push:{usedBy:userSession.userId}})
+            const offerUpdate =await Offer.updateOne({name:req.session.offer.name},{$push:{usedBy:req.session.userId}})
 
                 if(req.body.payment == 'Cash-on-Dilevery'){
                     res.redirect('/order-success')
                 }else if(req.body.payment == 'RazorPay'){
-                    res.render('razorpay',{userId:userSession.userId,total:completeUser.cart.totalPrice})
+                    res.render('razorpay',{userId:req.session.userId,total:completeUser.cart.totalPrice})
                 }else if(req.body.payment == 'PayPal'){
-                    res.render('paypal',{userId:userSession.userId,total:completeUser.cart.totalPrice})
+                    res.render('paypal',{userId:req.session.userId,total:completeUser.cart.totalPrice})
                 }else{
                     res.redirect('/catalog')
                 }
@@ -528,9 +528,9 @@ const storeOrder = async(req,res)=>{
 
 const loadSuccess = async(req,res)=>{
     try {
-        userSession = req.session
-        if(userSession.userId){
-            const userData =await User.findById({ _id:userSession.userId })
+        // req.session = req.session
+        if(req.session.userId){
+            const userData =await User.findById({ _id:req.session.userId })
             const productData = await Product.find()
             for(let key of userData.cart.item){
                 console.log(key.productId,' + ',key.qty);
@@ -542,7 +542,7 @@ const loadSuccess = async(req,res)=>{
                 }
             }
             
-            // const orderData = await Orders.find({userId:userSession.userId})
+            // const orderData = await Orders.find({userId:req.session.userId})
             // for(let key of orderData.products.item){
             //     orderProductStatus.push(0)
             // }
@@ -550,11 +550,11 @@ const loadSuccess = async(req,res)=>{
             // orderData = orderProductStatus
             // await orderData.save()
             
-            await Orders.updateOne({userId:userSession.userId,_id:userSession.currentOrder},{$set:{'status':'Build'}})
-            await User.updateOne({_id:userSession.userId},{$set:{'cart.item':[],'cart.totalPrice':'0'}},{multi:true})
+            await Orders.updateOne({userId:req.session.userId,_id:req.session.currentOrder},{$set:{'status':'Build'}})
+            await User.updateOne({_id:req.session.userId},{$set:{'cart.item':[],'cart.totalPrice':'0'}},{multi:true})
             console.log("Order Built and Cart is Empty.");
         }
-        userSession.couponTotal = 0 
+        req.session.couponTotal = 0 
         res.render('orderSuccess')
     } catch (error) {
         console.log(error.message);
@@ -562,8 +562,8 @@ const loadSuccess = async(req,res)=>{
 }
 
 const razorpayCheckout = async(req,res)=>{
-    userSession = req.session
-    const userData =await User.findById({ _id:userSession.userId })
+    // req.session = req.session
+    const userData =await User.findById({ _id:req.session.userId })
     const completeUser = await userData.populate('cart.item.productId')
     var instance = new Razorpay({ key_id: 'rzp_test_0dGOmkN53nGuBg', key_secret: 'mEkJrYGMckakFAOXVahtu30g' })
     console.log(req.body);
@@ -580,30 +580,30 @@ const razorpayCheckout = async(req,res)=>{
 }
 
 const paypalCheckout = async(req,res)=>{
-    userSession = req.session
-    // const userData =await User.findById({ _id:userSession.userId })
+    // req.session = req.session
+    // const userData =await User.findById({ _id:req.session.userId })
     // const completeUser = await userData.populate('cart.item.productId')
 }
 
 const addCoupon = async(req,res)=>{
     try {
-        userSession = req.session
-        if(userSession.userId){
-            const userData =await User.findById({ _id:userSession.userId })
+        // req.session = req.session
+        if(req.session.userId){
+            const userData =await User.findById({ _id:req.session.userId })
             const offerData = await Offer.findOne({name:req.body.offer})
 
             if(offerData){
-                if(offerData.usedBy != userSession.userId){
-                    userSession.offer.name = offerData.name
-                    userSession.offer.type = offerData.type 
-                    userSession.offer.discount = offerData.discount 
+                if(offerData.usedBy != req.session.userId){
+                    req.session.offer.name = offerData.name
+                    req.session.offer.type = offerData.type 
+                    req.session.offer.discount = offerData.discount 
                     
-                    let updatedTotal =userData.cart.totalPrice - (userData.cart.totalPrice * userSession.offer.discount)/100
-                    userSession.couponTotal = updatedTotal
-                    console.log(userSession)
+                    let updatedTotal =userData.cart.totalPrice - (userData.cart.totalPrice * req.session.offer.discount)/100
+                    req.session.couponTotal = updatedTotal
+                    console.log(req.session)
                     res.redirect('/cart')    
                 }else{
-                    userSession.offer.usedBy = true
+                    req.session.offer.usedBy = true
                     res.redirect('/cart')
                 }
 
