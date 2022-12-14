@@ -408,6 +408,7 @@ const addToCart = async(req,res,next)=>{
     const usertemp =await userData.addToCart(productData)
     if(usertemp){
         req.session.couponTotal = usertemp.cart.totalPrice
+        req.session.offer = offer
         console.log('usertemp:',usertemp);
     }
     res.redirect('/catalog')
@@ -421,6 +422,7 @@ const deleteCart = async(req,res,next)=>{
     if(usertemp){
         // req.session.couponTotal = usertemp.cart.totalPrice
         req.session.couponTotal = usertemp.cart.totalPrice
+        req.session.offer = offer
         console.log('usertemp:',usertemp);
     }
     res.redirect('/cart')
@@ -445,6 +447,7 @@ const editQty = async(req,res)=>{
     //update coupon
     req.session.couponTotal =totalPrice - (totalPrice*offer.discount)/100
     userData.cart.totalPrice = totalPrice
+    req.session.offer = offer
     await userData.save()
 
     
