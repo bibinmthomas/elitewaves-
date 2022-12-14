@@ -383,6 +383,9 @@ const loadCart = async(req,res)=>{
                 //update coupon
                 req.session.couponTotal = userData.cart.totalPrice
             }
+            if(req.session.coupon <= userData.cart.totalPrice){
+                req.session.couponTotal = userData.cart.totalPrice
+            }
             // if(req.session.offer =='None'){
             //     req.session.couponTotal = userData.cart.totalPrice
             // }
@@ -404,7 +407,8 @@ const addToCart = async(req,res,next)=>{
     const productData =await Product.findById({ _id:productId })
     const usertemp =await userData.addToCart(productData)
     if(usertemp){
-        console.log(usertemp);
+        req.session.couponTotal = usertemp.cart.totalPrice
+        console.log('usertemp:',usertemp);
     }
     res.redirect('/catalog')
 }
@@ -416,7 +420,8 @@ const deleteCart = async(req,res,next)=>{
     const usertemp =await userData.removefromCart(productId)
     if(usertemp){
         // req.session.couponTotal = usertemp.cart.totalPrice
-        console.log(usertemp);
+        req.session.couponTotal = usertemp.cart.totalPrice
+        console.log('usertemp:',usertemp);
     }
     res.redirect('/cart')
 }
