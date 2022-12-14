@@ -107,6 +107,7 @@ const verifyLogin = async(req,res)=>{
 
 const loadStore = async(req,res)=>{
     userSession = req.session
+    //coupon initialize
     if(userSession.offer){}else{
         userSession.offer = offer
         userSession.couponTotal = couponTotal
