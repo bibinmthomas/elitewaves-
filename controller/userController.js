@@ -149,7 +149,7 @@ const loadCatalog =async(req,res)=>{
         products:productData,
         id:userSession.userId,
         totalPages:Math.ceil(count/limit),
-        currentPage:new Number(page) ,
+        currentPage:new Number(page),
         previous:new Number(page)-1,
         next:new Number(page)+1
     })

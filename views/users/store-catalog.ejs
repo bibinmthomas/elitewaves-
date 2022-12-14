@@ -196,9 +196,15 @@
 
     <div class="nk-gap-3"></div>
     <div class="nk-pagination nk-pagination-center">
+        <% if(previous>0){ %>
         <a href="?page=<%= previous %>" class="nk-pagination-prev">
             <span class="ion-ios-arrow-back"></span>
         </a>
+        <%}else{%>
+            <a href="?page=<%= currentPage %>" class="nk-pagination-prev">
+            <span class="ion-ios-arrow-back"></span>
+        </a>
+        <% } %>
         <nav>
         <% for(let j = 1; j<= totalPages; j++){ %>
             <% if(currentPage == j){ %>
@@ -207,9 +213,15 @@
             <a href="?page=<%= j %>"><%= j %></a>
         <% }} %>
         </nav>
+        <% if(next<=totalPages){ %>
         <a href="?page=<%= next %>" class="nk-pagination-next">
             <span class="ion-ios-arrow-forward"></span>
         </a>
+        <% }else{%>
+        <a href="?page=<%= currentPage %>" class="nk-pagination-next">
+            <span class="ion-ios-arrow-forward"></span>
+        </a> 
+        <% } %>
     </div>
 
     <!-- END: Pagination -->
