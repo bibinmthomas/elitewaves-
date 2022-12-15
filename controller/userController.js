@@ -2,7 +2,6 @@ const User = require('../models/userModel')
 const Product = require('../models/productModel')
 const Orders = require('../models/ordersModel')
 const Offer = require('../models/offerModel')
-const alert = require('alert'); 
 
 
 
@@ -162,23 +161,30 @@ const loadSignup = (req,res)=>{
 }
 const storeSignup =async (req,res)=>{
     try{
-
-        const spassword = await securePassword(req.body.password)
-        const user =User({
-            name:req.body.name,
-            email:req.body.email,
-            mobile:req.body.mno,
-            password:spassword,
-            isAdmin:0,
-        })
-        const userData =  await user.save()
-        newUser = userData._id
-        if(userData){
-            res.redirect('/verifyOtp')
+        const userCheck = await User.findOne({email:req.body.email})
+        if(userCheck){
+            res.render('../signup',{message:"User already exists."})
         }else{
-            res.render('../signup',{message:"Your registration was a failure"})
+            if(req.body.password == req.body.passwordCheck){
+                const spassword = await securePassword(req.body.password)
+                const user =User({
+                name:req.body.name,
+                email:req.body.email,
+                mobile:req.body.mno,
+                password:spassword,
+                isAdmin:0,
+            })
+            const userData =  await user.save()
+            newUser = userData._id
+            if(userData){
+                res.redirect('/verifyOtp')
+            }else{
+                res.render('../signup',{message:"Your registration was a failure"})
+            }
+            }else{
+                res.render('../signup',{message:"Different Passwords entered."})
+            }
         }
-
     }catch(error){
         console.log(error.message);
     }
@@ -514,7 +520,7 @@ const storeOrder = async(req,res)=>{
             // console.log('req.session.currentOrder',req.session.currentOrder);
             
             const offerUpdate =await Offer.updateOne({name:req.session.offer.name},{$push:{usedBy:req.session.userId}})
-
+            
                 if(req.body.payment == 'Cash-on-Dilevery'){
                     res.redirect('/order-success')
                 }else if(req.body.payment == 'RazorPay'){
