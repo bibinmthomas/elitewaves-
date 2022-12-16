@@ -227,6 +227,15 @@ const userDashboard = async(req,res)=>{
         console.log(error.message)
     }
 }
+const userTrasactions = async(req,res)=>{
+    try {
+        const orderData = await Orders.find({userId:req.session.userId})
+        const userData = await User.findById({_id:req.session.userId})
+        res.render('trasactions',{user:userData,userOrders:orderData})
+    } catch (error) {
+        console.log(error.message)
+    }
+}
 const userLogout = async(req,res)=>{
     // req.session = req.session
     req.session.userId = false
@@ -642,6 +651,7 @@ module.exports = {
     loadStore,
     loadLogin,
     userDashboard,
+    userTrasactions,
     loadSignup,
     storeSignup,
     loadOtp,

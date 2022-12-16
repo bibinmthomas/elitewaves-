@@ -53,7 +53,7 @@ userRoute.get('/login',userMiddleware.isLogout,userController.loadLogin)
 userRoute.post('/login',userController.verifyLogin)
 
 userRoute.get('/dashboard',userMiddleware.isLogin,userController.userDashboard)
-
+userRoute.get('/trasactions',userMiddleware.isLogin,userController.userTrasactions)
 
 userRoute.get('/edit-user',userMiddleware.isLogin,userController.editUser)
 userRoute.post('/edit-user',userController.updateUser)

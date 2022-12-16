@@ -1,4 +1,4 @@
-<!-- <%- include('../partials/userHead') %>
+<%- include('../partials/userHead') %>
 <div class="container row">
   <div class="col-6">
     <h1 class="d-inline">Welcome  <%= user.name %> </h1>
@@ -95,4 +95,4 @@
                   </div>
               </div>
 
-<%- include('../partials/userFooter') %> -->
+<%- include('../partials/userFooter') %>
