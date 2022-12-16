@@ -2,6 +2,7 @@ const User = require('../models/userModel')
 const Product = require('../models/productModel')
 const Orders = require('../models/ordersModel')
 const Offer = require('../models/offerModel')
+const Category = require('../models/categoryModel')
 
 
 
@@ -122,31 +123,62 @@ const loadCatalog =async(req,res)=>{
     if (req.query.search) {
         search = req.query.search
     }
+    console.log(search);
+
+    let category = ''
+    if (req.query.id) {
+        category = req.query.id
+    }
+    console.log(category);
+
 
     let page = 1
     if (req.query.page) {
         page = req.query.page
     }
     const limit = 6
-
-    const productData = await Product.find({
-        $or:[
-            {name:{ $regex:'.*'+search+'.*',$options:'i' }}
-        ]
-    })
-    .limit(limit * 1)
-    .skip((page - 1) * limit)
-    .exec()
-
-    const count = await Product.find({
-        $or:[
-            {name:{ $regex:'.*'+search+'.*',$options:'i' }}
-        ]
-    }).countDocuments()
+    let productData
+    let count
+    const categoryData = await Category.find()
+    if(search){
+         productData = await Product.find({
+            $or:[
+                {name:{ $regex:'.*'+search+'.*',$options:'i' }}
+            ]
+        })
+        .limit(limit * 1)
+        .skip((page - 1) * limit)
+        .exec()
+    
+        count = await Product.find({
+            $or:[
+                {name:{ $regex:'.*'+search+'.*',$options:'i' }}
+            ]
+        }).countDocuments()
+    }else if(category){
+        productData = await Product.find({
+            $or:[
+                {genre:{ $regex:'.*'+category+'.*',$options:'i' }}
+            ]
+        })
+        .limit(limit * 1)
+        .skip((page - 1) * limit)
+        .exec()
+    
+        count = await Product.find({
+            $or:[
+                {name:{ $regex:'.*'+category+'.*',$options:'i' }}
+            ]
+        }).countDocuments()
+    }else{
+        productData = await Product.find()
+        count = await Product.find().countDocuments()
+    }
 
     res.render('store-catalog',{
         isLoggedin,
         products:productData,
+        category:categoryData,
         id:req.session.userId,
         totalPages:Math.ceil(count/limit),
         currentPage:new Number(page),
@@ -154,6 +186,46 @@ const loadCatalog =async(req,res)=>{
         next:new Number(page)+1
     })
 }
+
+// const selectCategory =async(req,res)=>{
+
+//     let category = ''
+//     if (req.query.id) {
+//         category = req.query.id
+//     }
+//     console.log(req.query.id);
+
+//     let page = 1
+//     if (req.query.page) {
+//         page = req.query.page
+//     }
+//     const limit = 6
+
+//     const productData = await Product.find({
+//         $or:[
+//             {genre:{ $regex:'.*'+category+'.*',$options:'i' }}
+//         ]
+//     })
+//     .limit(limit * 1)
+//     .skip((page - 1) * limit)
+//     .exec()
+
+//     const count = await Product.find({
+//         $or:[
+//             {name:{ $regex:'.*'+category+'.*',$options:'i' }}
+//         ]
+//     }).countDocuments()
+
+//     res.render('store-catalog',{
+//         isLoggedin,
+//         products:productData,
+//         id:req.session.userId,
+//         totalPages:Math.ceil(count/limit),
+//         currentPage:new Number(page),
+//         previous:new Number(page)-1,
+//         next:new Number(page)+1
+//     })
+// }
 
 
 const loadSignup = (req,res)=>{
@@ -649,6 +721,7 @@ const addCoupon = async(req,res)=>{
 module.exports = { 
     verifyLogin,
     loadStore,
+    // selectCategory,
     loadLogin,
     userDashboard,
     userTrasactions,

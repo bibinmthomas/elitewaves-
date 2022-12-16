@@ -96,3 +96,22 @@
               </div>
 
 <%- include('../partials/userFooter') %>
+
+
+            <!-- <div class="col-md-6">
+                <div class="dropdown">
+                <div class="dropdown-menu">
+                  <% for(let key of category){ %>
+                    <a class="dropdown-item" value="<%= key.name %>"><%= key.name %></a> 
+                    <% } %>
+                    </div>
+                </div>
+            </div> -->
+            
+
+<div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+  <% if( category.length>= 0){ %>
+      <% for(let i=1;i <=category.length; i++){ %>
+<a class="dropdown-item" href="/category?id=<%=category[i-1].Category%>"><%=category[i-1].Category%></a>
+<% }} %>
+</div>
