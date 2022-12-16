@@ -30,6 +30,7 @@ adminRoute.use('/',express.static('public/admin'))
 userRoute.set('view engine','ejs')
 userRoute.set('views','./views/users')
 userRoute.use('/',express.static('public'))
+userRoute.use('/',express.static('public/admin'))
 
 userRoute.use(express.json())
 userRoute.use(express.urlencoded({extended:true}))
