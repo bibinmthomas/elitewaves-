@@ -44,6 +44,8 @@ const loadAdminHome = async(req,res)=>{
             const categoryData = await Category.find()
             const categoryArray = []
             const orderGenreCount = []
+            let totalSales = 0
+            let countOrders = 0
             for(let key of categoryData){
                 categoryArray.push(key.name)
                 orderGenreCount.push(0)
@@ -54,6 +56,8 @@ const loadAdminHome = async(req,res)=>{
             for(let key of orderData){
                 const uppend = await key.populate('products.item.productId')
                 completeorder.push(uppend)
+                totalSales += key.products.totalPrice
+                countOrders++
                 
             }
             
@@ -72,7 +76,10 @@ const loadAdminHome = async(req,res)=>{
 
             const productData = await Product.find()
             const userData = await User.find()
-            res.render('adminDashboard',{products:productData,users:userData,category:categoryArray,count:orderGenreCount})
+            const userCount = userData.reduce((acc,curr)=>{
+                return acc+1
+            },0)
+            res.render('adminDashboard',{products:productData,users:userData,category:categoryArray,count:orderGenreCount,totalSales:totalSales,countOrders:countOrders,userCount:userCount})
         }
         else{
             res.redirect('/admin/login')
