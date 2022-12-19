@@ -25,6 +25,7 @@ const securePassword = async(password)=>{
 
 const path = require('path')
 const multer = require('multer')
+const { name } = require('ejs')
 let Storage = multer.diskStorage({
     destination:"./public/assets/uploads/",
     filename:(req,file,cb)=>{
@@ -195,11 +196,25 @@ const viewCategory = async(req,res)=>{
     res.render('adminCategory',{category:categoryData})
 }
 const addCategory = async(req,res)=>{
+    try {
+        const checkCategory = await Category.find({name:req.body.category})
+    if(checkCategory[0].name == req.body.category){
+        res.redirect('/admin/adminCategory')
+    }else{
+        const category =Category({
+            name:req.body.category
+        })
+        const categoryData = await category.save()
+        res.redirect('/admin/adminCategory')
+    }
     const category =Category({
         name:req.body.category
     })
     const categoryData = await category.save()
     res.redirect('/admin/adminCategory')
+    } catch (error) {
+        console.log(error.message);
+    } 
 }
 const deleteCategory = async(req,res)=>{
     try {
